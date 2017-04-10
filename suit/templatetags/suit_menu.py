@@ -118,6 +118,13 @@ class Menu(object):
 
     def make_menu(self, config):
         menu = []
+
+        try:
+            sites = True
+            config = [c for c in config if c != 'sites']
+        except ValueError:
+            sites = False
+
         if not isinstance(config, (tuple, list)):
             raise TypeError('Django Suit MENU config parameter must be '
                             'tuple or list. Got %s' % repr(config))
@@ -125,6 +132,9 @@ class Menu(object):
             app = self.make_app(app)
             if app:
                 menu.append(app)
+
+        if sites:
+            menu += self.make_menu_from_native_only()
 
         return menu
 
